@@ -1,0 +1,24 @@
+{
+  "version": "0.4.0+117",
+  "build": 117,
+  "notes": "看剧吧 0.4.0+117",
+  "release": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/tag/v0.4.0%2B117",
+  "published_at": "2026-11-17T09:56:53Z",
+  "apks": {
+    "arm64-v8a": {
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0+117/kanjuba-clean-0.4.0+117-arm64-v8a.apk",
+      "sha256": "95721b8f84e747bf3a8f14e4a1cab731331372753660430a43762ca88966e096",
+      "size": 36067088
+    },
+    "armeabi-v7a": {
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0+117/kanjuba-clean-0.4.0+117-armeabi-v7a.apk",
+      "sha256": "61e10cad41b6a4e59fc1f53a1308d7d9f5259cd8f2ac9c7ea7bb5ed63726b38d",
+      "size": 44622508
+    },
+    "x86_64": {
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0+117/kanjuba-clean-0.4.0+117-x86_64.apk",
+      "sha256": "014117e00099484813811c8d210ffd983c3f31b156fb2154c52e09256019ce77",
+      "size": 37795293
+    }
+  }
+}
