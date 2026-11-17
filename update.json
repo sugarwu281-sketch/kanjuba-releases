@@ -1,52 +1,88 @@
 {
-  "version": "0.4.0+119",
-  "build": 119,
-  "notes": "\n**公开发布镜像仓只发纯净版。**\n\n- 发布仓 `sugarwu281-sketch/kanjuba-releases` 是**公开**仓，完整版带着敏感站源\n  （黄豆 / 剧果 / 野果 / 帝果 / 黄果三系），不该公开可下载。发布脚本默认\n  `--variant clean`，只发纯净版；要发完整版必须显式加 `--variant full`。\n- 更新清单里只出现纯净版（`variants.clean`），并新增 `published_variants` 字段\n  说明这次发了哪些变体。\n- App 端：查不到自己变体的包时，提示改为「公开更新通道只发布纯净版，完整版不走这条通道」，\n  不再笼统说「更新清单里没有可用的安装包」。\n- `scripts/build_clean_release.py` 新增 `--skip-native`：只改 Dart 层时不必重编 Go 原生库。\n\n",
-  "release": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/tag/v0.4.0%2B119",
-  "published_at": "2026-11-17T10:18:07Z",
+  "version": "0.4.0+120",
+  "build": 120,
+  "notes": "\n**修「检查更新失败：Connection reset by peer」。**\n\n- **病因**：`raw.githubusercontent.com` 会 302 到 `raw.githubusercontentusercontent.com`，\n  这两个域在**国内移动网络**上经常被直接重置（用户 2026-11-17 真机实测，\n  完整版与纯净版都报 `SocketException: Connection reset by peer, errno = 104`）。\n  本机实测：`raw.githubusercontentusercontent.com` 直连也是 000（不通），\n  `cdn.jsdelivr.net` / `fastly.jsdelivr.net` / `gh-proxy.com` / `ghfast.top` /\n  `ghproxy.net` 都能取到同一份清单（version 0.4.0+119，3120 字节，内容一致）。\n- **修法**：清单地址改成**候选链**，逐个试，第一个读到的就用\n  （GitHub 直连 → jsDelivr → GitHub 代理站）。安装包同理：清单里多带一组\n  备用地址（GitHub 的 Release 资产实际走 `objects.githubusercontent.com`，\n  那一步也可能连不上）。\n- **安全**：安装包可能经第三方代理下载 —— 代理既能改字节也能改清单里的 sha256，\n  所以光校验 sha256 不够。新增**签名证书指纹校验**：证书指纹钉在应用里\n  （`kAppUpdateSigningCertSha256`），安装前用 `PackageManager` 读安装包证书，\n  对不上直接拒绝安装。这样即使整条链路被劫持，也只会装上我们自己证书签的包。\n- 顺手修掉设置页「检查更新」那行**没插值**的版本号（一直显示「当前 ，」），\n  现在显示真实版本。\n- 失败时不再只弹一句 SocketException：弹窗给一句话，详细原因（每个地址各是什么错、\n  清单最终来自哪个地址）写进「播放调试日记」。\n- 验证：`dart format` 0 改动、`dart analyze --fatal-infos` 无问题、`flutter test` 176 项通过。\n\n",
+  "release": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/tag/v0.4.0%2B120",
+  "published_at": "2026-11-17T10:41:15Z",
   "default_variant": "clean",
   "published_variants": [
     "clean"
   ],
   "apks": {
     "arm64-v8a": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-arm64-v8a.apk",
-      "sha256": "f6cb9f4781cd1f653261f1cbc858b08e32abfb70109b59a1b9abb4cf1e0cd9e4",
-      "size": 36066028,
-      "file": "kanjuba-clean-0.4.0+119-arm64-v8a.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+      "urls": [
+        "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+        "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+        "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+        "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk"
+      ],
+      "sha256": "ceddd5078fe9443cc3a5d6f5b872af241d7a5f02c8b35f8bc9bd7dfd0d12b55a",
+      "size": 36070224,
+      "file": "kanjuba-clean-0.4.0+120-arm64-v8a.apk"
     },
     "armeabi-v7a": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-armeabi-v7a.apk",
-      "sha256": "4eaf63ff75637aa62255566e52cb5f5e1b337762968f6969ff7de39cba20ad9d",
-      "size": 44624028,
-      "file": "kanjuba-clean-0.4.0+119-armeabi-v7a.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+      "urls": [
+        "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+        "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+        "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+        "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk"
+      ],
+      "sha256": "452279a692e710da09c7a3d40a48cdb479b18799b7d4a062f1762e28434682fb",
+      "size": 44631544,
+      "file": "kanjuba-clean-0.4.0+120-armeabi-v7a.apk"
     },
     "x86_64": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-x86_64.apk",
-      "sha256": "b323bcac5519e7cd7fa61e0fc3c648f17858f6a7471e223e2d52f29cfa6c8fc5",
-      "size": 37794857,
-      "file": "kanjuba-clean-0.4.0+119-x86_64.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+      "urls": [
+        "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+        "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+        "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+        "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk"
+      ],
+      "sha256": "dc7ffd80449e87bc579d3fc0aae71d1b4dc480105496f4931a54ed27964e9d31",
+      "size": 37800421,
+      "file": "kanjuba-clean-0.4.0+120-x86_64.apk"
     }
   },
   "variants": {
     "clean": {
       "arm64-v8a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-arm64-v8a.apk",
-        "sha256": "f6cb9f4781cd1f653261f1cbc858b08e32abfb70109b59a1b9abb4cf1e0cd9e4",
-        "size": 36066028,
-        "file": "kanjuba-clean-0.4.0+119-arm64-v8a.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+        "urls": [
+          "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+          "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+          "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk",
+          "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-arm64-v8a.apk"
+        ],
+        "sha256": "ceddd5078fe9443cc3a5d6f5b872af241d7a5f02c8b35f8bc9bd7dfd0d12b55a",
+        "size": 36070224,
+        "file": "kanjuba-clean-0.4.0+120-arm64-v8a.apk"
       },
       "armeabi-v7a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-armeabi-v7a.apk",
-        "sha256": "4eaf63ff75637aa62255566e52cb5f5e1b337762968f6969ff7de39cba20ad9d",
-        "size": 44624028,
-        "file": "kanjuba-clean-0.4.0+119-armeabi-v7a.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+        "urls": [
+          "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+          "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+          "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk",
+          "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-armeabi-v7a.apk"
+        ],
+        "sha256": "452279a692e710da09c7a3d40a48cdb479b18799b7d4a062f1762e28434682fb",
+        "size": 44631544,
+        "file": "kanjuba-clean-0.4.0+120-armeabi-v7a.apk"
       },
       "x86_64": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-x86_64.apk",
-        "sha256": "b323bcac5519e7cd7fa61e0fc3c648f17858f6a7471e223e2d52f29cfa6c8fc5",
-        "size": 37794857,
-        "file": "kanjuba-clean-0.4.0+119-x86_64.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+        "urls": [
+          "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+          "https://gh-proxy.com/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+          "https://ghfast.top/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk",
+          "https://ghproxy.net/https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B120/kanjuba-clean-0.4.0%2B120-x86_64.apk"
+        ],
+        "sha256": "dc7ffd80449e87bc579d3fc0aae71d1b4dc480105496f4931a54ed27964e9d31",
+        "size": 37800421,
+        "file": "kanjuba-clean-0.4.0+120-x86_64.apk"
       }
     }
   }
