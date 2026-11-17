@@ -1,69 +1,52 @@
 {
-  "version": "0.4.0+118",
-  "build": 118,
-  "notes": "\n本版把**应用内自动更新**这条链路真正打通并发布到 GitHub，途中修掉了两个会让更新直接失败的问题。\n\n- **发布链路**：源码进私有仓 `sugarwu281-sketch/kanjuba`，安装包与更新清单进公开仓\n  `sugarwu281-sketch/kanjuba-releases`。公开仓只有 `README.md` 与 `update.json`，不含源码；\n  App 的更新检查是**匿名**请求，私有仓的 Release 匿名读不到（404），所以必须有这个公开通道。\n- **修复 1：更新清单里的下载链接 404**。GitHub 会把资产名里的 `+` 存成 `.`\n  （`kanjuba-0.4.0+117-…apk` → `kanjuba-0.4.0.117-…apk`），而清单的 URL 是拿本地文件名拼的，\n  指向了不存在的文件；上传时查询串里的裸 `+` 还会被当成空格。现在上传名做 percent 编码，\n  下载链接一律用**上传接口返回的真实资产名**拼。\n- **修复 2：六个安装包挤成三个键**。完整版与纯净版 applicationId 不同（可装在同一台手机上），\n  但清单原来只按 ABI 建键，后传的纯净版把完整版覆盖了。清单改为按**变体**分组\n  （`variants.full` / `variants.clean`），App 按自身变体取包；清单里没有自己那个变体时\n  **不给包**，避免装成另一个 App。\n- 应用内新增「检查更新」入口（设置页）：拉清单 → 按设备 ABI 选包 → 下载带进度 →\n  **sha256 校验**（不符即删）→ 调起系统安装器。Android 侧补 `REQUEST_INSTALL_PACKAGES`\n  权限与 FileProvider（Android 7+ 不接受 `file://`）。\n- 发布脚本自举：空仓先建 `main` 分支（空仓建不了 Release）；推送时 token 只出现在一次性\n  的 URL 里，upstream 仍指向干净的 `origin`，不会把 token 落进 `.git/config`。\n- 验证：`dart analyze --fatal-infos lib test` 无问题，`dart format --set-exit-if-changed lib test`\n  无改动，`flutter test` 171 项通过；远端核对（源码文件树 / 公开仓无源码 / 清单匿名可读 /\n  六个资产的 sha256 与清单、与本地文件三方一致）全部通过。\n\n",
-  "release": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/tag/v0.4.0%2B118",
-  "published_at": "2026-11-17T10:06:31Z",
-  "default_variant": "full",
+  "version": "0.4.0+119",
+  "build": 119,
+  "notes": "\n**公开发布镜像仓只发纯净版。**\n\n- 发布仓 `sugarwu281-sketch/kanjuba-releases` 是**公开**仓，完整版带着敏感站源\n  （黄豆 / 剧果 / 野果 / 帝果 / 黄果三系），不该公开可下载。发布脚本默认\n  `--variant clean`，只发纯净版；要发完整版必须显式加 `--variant full`。\n- 更新清单里只出现纯净版（`variants.clean`），并新增 `published_variants` 字段\n  说明这次发了哪些变体。\n- App 端：查不到自己变体的包时，提示改为「公开更新通道只发布纯净版，完整版不走这条通道」，\n  不再笼统说「更新清单里没有可用的安装包」。\n- `scripts/build_clean_release.py` 新增 `--skip-native`：只改 Dart 层时不必重编 Go 原生库。\n\n",
+  "release": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/tag/v0.4.0%2B119",
+  "published_at": "2026-11-17T10:18:07Z",
+  "default_variant": "clean",
+  "published_variants": [
+    "clean"
+  ],
   "apks": {
     "arm64-v8a": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-arm64-v8a.apk",
-      "sha256": "500ad2a6f3ec8d2036ebaaa1d66a81acabe46300414098e6632c8dff225c6655",
-      "size": 36063432,
-      "file": "kanjuba-0.4.0+118-arm64-v8a.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-arm64-v8a.apk",
+      "sha256": "f6cb9f4781cd1f653261f1cbc858b08e32abfb70109b59a1b9abb4cf1e0cd9e4",
+      "size": 36066028,
+      "file": "kanjuba-clean-0.4.0+119-arm64-v8a.apk"
     },
     "armeabi-v7a": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-armeabi-v7a.apk",
-      "sha256": "3e9400af20388134437f9e1d0c0ab0434af1d77bc0f1c8dff88866deed1e68a8",
-      "size": 44627432,
-      "file": "kanjuba-0.4.0+118-armeabi-v7a.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-armeabi-v7a.apk",
+      "sha256": "4eaf63ff75637aa62255566e52cb5f5e1b337762968f6969ff7de39cba20ad9d",
+      "size": 44624028,
+      "file": "kanjuba-clean-0.4.0+119-armeabi-v7a.apk"
     },
     "x86_64": {
-      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-x86_64.apk",
-      "sha256": "56235b3bcff6ee318f5a92a8b37895ab3b36f53d83031ffd45676a096d9b045d",
-      "size": 37793737,
-      "file": "kanjuba-0.4.0+118-x86_64.apk"
+      "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-x86_64.apk",
+      "sha256": "b323bcac5519e7cd7fa61e0fc3c648f17858f6a7471e223e2d52f29cfa6c8fc5",
+      "size": 37794857,
+      "file": "kanjuba-clean-0.4.0+119-x86_64.apk"
     }
   },
   "variants": {
-    "full": {
-      "arm64-v8a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-arm64-v8a.apk",
-        "sha256": "500ad2a6f3ec8d2036ebaaa1d66a81acabe46300414098e6632c8dff225c6655",
-        "size": 36063432,
-        "file": "kanjuba-0.4.0+118-arm64-v8a.apk"
-      },
-      "armeabi-v7a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-armeabi-v7a.apk",
-        "sha256": "3e9400af20388134437f9e1d0c0ab0434af1d77bc0f1c8dff88866deed1e68a8",
-        "size": 44627432,
-        "file": "kanjuba-0.4.0+118-armeabi-v7a.apk"
-      },
-      "x86_64": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-0.4.0%2B118-x86_64.apk",
-        "sha256": "56235b3bcff6ee318f5a92a8b37895ab3b36f53d83031ffd45676a096d9b045d",
-        "size": 37793737,
-        "file": "kanjuba-0.4.0+118-x86_64.apk"
-      }
-    },
     "clean": {
       "arm64-v8a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-clean-0.4.0%2B118-arm64-v8a.apk",
-        "sha256": "7c263cb82a6da7626276de35a9228681ab164a2da37dc661c95eaaae97624f80",
-        "size": 36065588,
-        "file": "kanjuba-clean-0.4.0+118-arm64-v8a.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-arm64-v8a.apk",
+        "sha256": "f6cb9f4781cd1f653261f1cbc858b08e32abfb70109b59a1b9abb4cf1e0cd9e4",
+        "size": 36066028,
+        "file": "kanjuba-clean-0.4.0+119-arm64-v8a.apk"
       },
       "armeabi-v7a": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-clean-0.4.0%2B118-armeabi-v7a.apk",
-        "sha256": "b62d677ddbbecfce49e0c85fb39e1a7466cc0fdd8d0b882f98a4ce2f07651570",
-        "size": 44622384,
-        "file": "kanjuba-clean-0.4.0+118-armeabi-v7a.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-armeabi-v7a.apk",
+        "sha256": "4eaf63ff75637aa62255566e52cb5f5e1b337762968f6969ff7de39cba20ad9d",
+        "size": 44624028,
+        "file": "kanjuba-clean-0.4.0+119-armeabi-v7a.apk"
       },
       "x86_64": {
-        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B118/kanjuba-clean-0.4.0%2B118-x86_64.apk",
-        "sha256": "40b52da2495709e0c97a6e2e84df3847f8cc5113216d6db75a3d110894685fc6",
-        "size": 37796137,
-        "file": "kanjuba-clean-0.4.0+118-x86_64.apk"
+        "url": "https://github.com/sugarwu281-sketch/kanjuba-releases/releases/download/v0.4.0%2B119/kanjuba-clean-0.4.0%2B119-x86_64.apk",
+        "sha256": "b323bcac5519e7cd7fa61e0fc3c648f17858f6a7471e223e2d52f29cfa6c8fc5",
+        "size": 37794857,
+        "file": "kanjuba-clean-0.4.0+119-x86_64.apk"
       }
     }
   }
